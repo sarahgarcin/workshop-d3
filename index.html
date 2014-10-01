@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Github events</title>
+	<link rel="stylesheet" href="">
+	<script src="../libs/d3.js" type="text/javascript"></script>
+	<script src="js/script.js" type="text/javascript"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var _data = new Array(); 
+
+		var dispatch = d3.dispatch("load", "statechange");
+
+		var groups = [
+  		"PullRequestEvent",
+  		"ForkEvent",
+  		"CreateEvent",
+  		"CommitCommentEvent"
+		];
+
+		d3.csv("data/french_cities_big.csv", function(error, data){
+			if(error) throw error;
+			_data = data;
+			var stateById = d3.map();
+			data.forEach(function(d) {
+    			d.PullRequestEvent = +d.PullRequestEvent;
+    			d.ForkEvent = +d.ForkEvent;
+    			d.CreateEvent = +d.CreateEvent;
+    			d.CommitCommentEvent = +d.CommitCommentEvent;
+    			d.nb_users = +d.nb_users;
+    			stateById.set(d.locations, d);
+			});
+			dispatch.load(stateById);
+			dispatch.statechange(stateById.get("Paris"));
+			
+			// drawSVG();
+			// drawDonut();
+
+		});
+
+		drawMenu();
+		drawDonut();
+
+	</script>
+	
+</body>
+</html>
